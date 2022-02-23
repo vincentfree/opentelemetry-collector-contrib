@@ -54,7 +54,7 @@ func Sum(resource *pdata.Resource, instrumentationLibrary *pdata.Instrumentation
 	for i := 0; i < sum.DataPoints().Len(); i++ {
 		var document objmodel.Document
 		dp := sum.DataPoints().At(i)
-		if dp.Type() == pdata.MetricValueTypeNone {
+		if dp.ValueType() == pdata.MetricValueTypeNone {
 			continue
 		}
 		if sum.IsMonotonic() {
@@ -161,7 +161,7 @@ func initCommonFields(document *objmodel.Document, resource *pdata.Resource, ins
 }
 
 func setNumberValue(document *objmodel.Document, dp pdata.NumberDataPoint) {
-	switch dp.Type() {
+	switch dp.ValueType() {
 	case pdata.MetricValueTypeDouble:
 		document.AddDouble("value", dp.DoubleVal())
 	case pdata.MetricValueTypeInt:
