@@ -51,7 +51,7 @@ type AWSMSKConfig struct {
 	BrokerAddr string `mapstructure:"broker_addr"`
 }
 
-// KerberosConfig defines kereros configuration.
+// KerberosConfig defines kerberos configuration.
 type KerberosConfig struct {
 	ServiceName string `mapstructure:"service_name"`
 	Realm       string `mapstructure:"realm"`
