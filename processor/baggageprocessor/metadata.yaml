@@ -1,0 +1,18 @@
+type: baggage
+
+status:
+  class: processor
+  stability:
+    development: [traces, logs, metrics]
+  distributions: [contrib]
+  codeowners:
+    active: [vincentfree]
+tests:
+  config:
+    actions:
+      - key: user.id
+        action: extract
+        from_context: true
+      - key: session.id
+        action: inject
+        value: "test-session"

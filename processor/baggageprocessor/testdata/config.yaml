@@ -1,0 +1,176 @@
+# W3C Baggage Processor Configuration Examples
+
+# Basic configuration - extract baggage to attributes
+baggage/extract:
+  actions:
+    - key: user.id
+      action: extract
+      from_context: true
+    - key: session.id
+      action: extract
+      from_context: true
+      to_attribute: custom.session.id
+
+# Inject attributes as baggage
+baggage/inject:
+  actions:
+    - key: service.version
+      action: inject
+      from_attribute: service.version
+    - key: environment
+      action: inject
+      value: production
+      properties:
+        priority: high
+        source: config
+
+# Complex configuration with multiple actions
+baggage/complex:
+  attribute_prefix: "w3c.baggage."
+  max_baggage_size: 4096
+  drop_invalid_baggage: true
+  actions:
+    # Extract user context from baggage
+    - key: user.id
+      action: extract
+      from_context: true
+    - key: user.role
+      action: extract
+      from_context: true
+      to_attribute: auth.user.role
+    
+    # Inject service information
+    - key: service.name
+      action: inject
+      from_attribute: service.name
+    - key: service.version
+      action: inject
+      from_attribute: service.version
+      properties:
+        type: semantic
+        format: semver
+    
+    # Update existing baggage with new values
+    - key: trace.sampling.priority
+      action: upsert
+      from_attribute: sampling.priority
+      properties:
+        source: processor
+        timestamp: auto
+    
+    # Remove sensitive information
+    - key: internal.debug
+      action: delete
+
+# Use case: E-commerce application baggage handling
+baggage/ecommerce:
+  attribute_prefix: "baggage."
+  max_baggage_size: 8192
+  drop_invalid_baggage: false
+  actions:
+    # Extract customer context
+    - key: customer.id
+      action: extract
+      from_context: true
+    - key: customer.tier
+      action: extract
+      from_context: true
+      to_attribute: customer.membership.tier
+    - key: session.id
+      action: extract
+      from_context: true
+    
+    # Inject request context
+    - key: request.id
+      action: inject
+      from_attribute: http.request.id
+    - key: feature.flags
+      action: inject
+      from_attribute: feature.enabled_flags
+      properties:
+        format: json
+        version: v1
+    
+    # Update cart information
+    - key: cart.total
+      action: upsert
+      from_attribute: cart.total_amount
+      properties:
+        currency: USD
+        precision: "2"
+    
+    # Clean up temporary data
+    - key: temp.calculation
+      action: delete
+
+# Use case: Microservices tracing with baggage
+baggage/microservices:
+  attribute_prefix: "trace.baggage."
+  max_baggage_size: 6144
+  drop_invalid_baggage: true
+  actions:
+    # Extract distributed tracing context
+    - key: trace.parent.service
+      action: extract
+      from_context: true
+    - key: trace.correlation.id
+      action: extract
+      from_context: true
+      to_attribute: correlation.id
+    - key: user.context
+      action: extract
+      from_context: true
+    
+    # Inject service metadata
+    - key: service.instance.id
+      action: inject
+      from_attribute: service.instance.id
+    - key: deployment.version
+      action: inject
+      from_attribute: deployment.version
+      properties:
+        environment: production
+        region: us-east-1
+    
+    # Update performance metrics
+    - key: performance.budget
+      action: upsert
+      from_attribute: slo.response_time_budget
+      properties:
+        unit: milliseconds
+        threshold: "500"
+
+# Use case: Security and compliance baggage handling
+baggage/security:
+  attribute_prefix: "security.baggage."
+  max_baggage_size: 4096
+  drop_invalid_baggage: true
+  actions:
+    # Extract security context
+    - key: auth.token.type
+      action: extract
+      from_context: true
+    - key: auth.permissions
+      action: extract
+      from_context: true
+      to_attribute: user.permissions
+    
+    # Inject compliance metadata
+    - key: compliance.gdpr.consent
+      action: inject
+      from_attribute: gdpr.consent_status
+      properties:
+        version: "2.0"
+        timestamp: auto
+    - key: audit.trace.id
+      action: inject
+      from_attribute: audit.trace_id
+      properties:
+        retention: "7years"
+        classification: sensitive
+    
+    # Remove sensitive debug information
+    - key: debug.internal.state
+      action: delete
+    - key: temp.auth.challenge
+      action: delete
