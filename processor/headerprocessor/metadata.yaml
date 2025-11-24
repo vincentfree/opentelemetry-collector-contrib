@@ -1,0 +1,22 @@
+type: headers
+
+status:
+  class: processor
+  stability:
+    development: [traces, metrics, logs]
+  distributions: [contrib]
+  warnings: [Identity Conflict]
+  codeowners:
+    active: [vincentfree]
+tests:
+  config:
+    # Example configuration reflecting the header processor schema
+    headers:
+      - name: "User-Agent"
+        attribute: "http.user_agent"
+      - name: "x-correlation-id"
+        prefix: "req."
+    prefix: "http.header."
+    separator: ";"
+    include_all: false
+    exclude_patterns: ["^authorization$", "^cookie$"]
