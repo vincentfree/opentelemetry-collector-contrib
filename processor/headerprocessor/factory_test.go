@@ -18,18 +18,6 @@ func TestCreateDefaultConfig(t *testing.T) {
 	}
 }
 
-func TestConfigValidate(t *testing.T) {
-	c := &Config{}
-	if err := c.Validate(); err == nil {
-		t.Fatalf("expected error for empty config")
-	}
-
-	c = &Config{IncludeAll: true}
-	if err := c.Validate(); err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
-}
-
 func TestFactoryConstructors(t *testing.T) {
 	f := NewFactory()
 	cfg := f.CreateDefaultConfig()

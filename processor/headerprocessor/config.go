@@ -8,7 +8,7 @@ import (
 )
 
 // Config defines the configuration for the header processor.
-// It controls which headers to extract from client context and how to map
+// It controls which headers to extract from the client context and how to map
 // them to attribute keys on telemetry data.
 type Config struct {
 	// Headers is a list of header extraction rules.
