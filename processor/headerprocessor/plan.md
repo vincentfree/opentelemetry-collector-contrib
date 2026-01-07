@@ -7,12 +7,14 @@ The Header Processor is a component that extracts HTTP headers from the request 
 ## Core Functionality
 
 ### Header Extraction
+
 - Extract headers from the request context using the OpenTelemetry Collector's client metadata
 - Support extraction of one or more specific headers by name
 - Support extraction of all headers with optional filtering patterns
 - Handle multiple values for a single header (as per HTTP specification)
 
 ### Attribute Setting
+
 - Set extracted header values as attributes on telemetry data
 - Support optional prefixing of attribute names
 - Handle multiple header values by joining them with a configurable separator (default: `;`)
@@ -48,6 +50,7 @@ processors:
 ## Implementation Architecture
 
 ### 1. Configuration Structure
+
 ```go
 type Config struct {
     Headers         []HeaderConfig `mapstructure:"headers"`
@@ -67,17 +70,20 @@ type HeaderConfig struct {
 ### 2. Core Processing Logic
 
 #### Context Header Extraction
+
 - Use `client.FromContext(ctx)` to access request metadata
 - Extract headers from `client.Metadata` using case-insensitive lookup
 - Handle multiple values per header according to HTTP specification
 
 #### Attribute Setting
+
 - Apply prefixes in order of precedence: header-specific prefix > global prefix
 - Generate attribute names: `[prefix][attribute_name || header_name]`
 - Join multiple header values using the configured separator
 - Set attributes on spans, metrics, and log records
 
 ### 3. Processing Flow
+
 1. **Context Validation**: Verify that client metadata is available in the context
 2. **Header Extraction**: Extract configured headers or all headers (if include_all is true)
 3. **Filtering**: Apply exclude patterns when include_all is enabled
@@ -87,16 +93,19 @@ type HeaderConfig struct {
 ## Key Features
 
 ### Multi-Value Header Support
+
 - Handle headers with multiple values (e.g., `Accept: text/html, application/json`)
 - Join values using configurable separator (default: `;`)
 - Preserve all values to maintain complete header information
 
 ### Flexible Naming
+
 - Support custom attribute names different from header names
 - Apply prefixes at global or per-header level
 - Use header name as default attribute name if not specified
 
 ### Security Considerations
+
 - Provide exclude patterns to prevent extraction of sensitive headers
 - Default exclusions for common sensitive headers (authorization, cookie)
 - Case-insensitive header matching for robustness
@@ -104,6 +113,7 @@ type HeaderConfig struct {
 ## Use Cases
 
 ### 1. Request Tracing
+
 ```yaml
 processors:
   headers:
@@ -115,6 +125,7 @@ processors:
 ```
 
 ### 2. User Agent Analysis
+
 ```yaml
 processors:
   headers:
@@ -127,6 +138,7 @@ processors:
 ```
 
 ### 3. Custom Header Extraction
+
 ```yaml
 processors:
   headers:
@@ -140,6 +152,7 @@ processors:
 ```
 
 ### 4. Comprehensive Header Capture
+
 ```yaml
 processors:
   headers:
@@ -154,6 +167,7 @@ processors:
 ## Implementation Steps
 
 ### Phase 1: Core Infrastructure
+
 1. Define configuration structures and validation ✓
 2. Implement factory and component lifecycle ✓
 3. Create basic header extraction from context ✓
@@ -161,21 +175,24 @@ processors:
 5. Add unit tests for traces and logs processors ✓
 
 ### Phase 2: Processing Logic
+
 1. Implement header-to-attribute conversion ✓
 2. Add support for prefixes and custom attribute names ✓
 3. Handle multiple header values with configurable separator ✓
 4. Add processing for traces, metrics, and logs ✓
 
 ### Phase 3: Advanced Features
+
 1. Implement include_all functionality ✓
 2. Add exclude pattern filtering ✓
 3. Add case-insensitive header matching ✓
 4. Comprehensive integration testing ✓
 
 ### Phase 4: Documentation and Examples
-1. Create comprehensive README with examples
-2. Add configuration documentation
-3. Create example configurations for common use cases
+
+1. Create comprehensive README with examples ✓
+2. Add configuration documentation ✓
+3. Create example configurations for common use cases ✓
 4. Add performance benchmarks
 
 ## Dependencies
@@ -188,17 +205,20 @@ processors:
 ## Testing Strategy
 
 ### Unit Tests
+
 - Configuration validation and parsing
 - Header extraction logic
 - Attribute name generation with prefixes
 - Multiple value handling
 
 ### Integration Tests
+
 - End-to-end processing with real telemetry data
 - Context metadata extraction
 - Performance testing with various header configurations
 
 ### Edge Cases
+
 - Missing headers
 - Empty header values
 - Headers with special characters
