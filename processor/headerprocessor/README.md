@@ -39,14 +39,14 @@ processors:
       - name: "user-agent"           # Header name to extract
         attribute: "http.user_agent" # Target attribute name (optional, defaults to header name)
         prefix: "header."            # Optional prefix for attribute name
-
+        
       - name: "x-correlation-id"
         attribute: "correlation_id"
-
+        
       - name: "authorization"
         attribute: "auth_header"
         prefix: "request."
-
+        
     # Global settings
     prefix: "http.header."           # Global prefix applied to all headers (optional)
     separator: ";"                   # Separator for multiple header values (default: ";")
@@ -120,7 +120,7 @@ processors:
 
 ## Security and Privacy
 
-The Header Processor can potentially capture sensitive information if headers like `Authorization` or `Cookie` are extracted.
+The Header Processor can potentially capture sensitive information if headers like `Authorization` or `Cookie` are extracted. 
 
 - Use `exclude_patterns` when `include_all` is enabled to prevent accidental extraction of sensitive data.
 - It is recommended to explicitly list only the headers you need when possible.
